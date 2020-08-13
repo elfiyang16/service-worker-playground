@@ -1,5 +1,5 @@
 "use strict";
-const version = 9;
+const version = 11;
 var isOnline = true;
 var isLoggedIn = false;
 var cacheName = `ramblings-${version}`;
@@ -12,7 +12,7 @@ var urlsToCache = {
     "/404",
     "/login",
     "/offline",
-    "/css/styles.css",
+    "/css/style.css",
     "/js/blog.js",
     "/js/home.js",
     "/js/login.js",
@@ -26,6 +26,7 @@ var urlsToCache = {
 self.addEventListener("install", onInstall);
 self.addEventListener("activate", onActivate);
 self.addEventListener("message", onMessage);
+self.addEventListener("fetch", onFetch);
 
 main().catch(console.error);
 
@@ -64,6 +65,43 @@ function onMessage({ data }) {
 async function onActivate(e) {
   // tell not to shut down until handleActivation is finished
   e.waitUntil(handleActivation());
+}
+
+function onFetch(e) {
+  e.respondWith(router(e.request));
+}
+
+async function router(req) {
+  var url = new URL(req.url);
+  var res;
+
+  var reqURL = url.pathname;
+  var cache = await caches.open(cacheName);
+  // request for site's own URL?
+  if (url.origin == location.origin) {
+    try {
+      let fetchOptions = {
+        method: req.method,
+        headers: req.headers,
+        credentials: "omit",
+        cache: "no-store",
+      };
+      // try to get from the server
+      let res = await fetch(req.url, fetchOptions);
+      if (res && res.ok) {
+        // then cache it
+        await cache.put(reqURL, res.clone());
+        return res;
+      }
+    } catch (err) {
+      // if we can;t get from server, let's see if it's in cache
+      res = await cache.match(reqURL);
+      if (res) {
+        return res;
+      }
+    }
+  }
+  // TODO: figure out CORS request
 }
 
 async function handleActivation() {
