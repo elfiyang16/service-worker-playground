@@ -4,11 +4,10 @@
 
 This package contains the starter files for the Web Workers and Service Workers sections of the course
 
-For the solutions and additional info, head to the course repo: https://github.com/FrontendMasters/service-workers-offline
 
 ## Links
 
-* https://serviceworke.rs/
+* *https://serviceworke.rs/*
 
 * https://developers.google.com/web/fundamentals/primers/service-workers/
 
@@ -21,3 +20,4 @@ For the solutions and additional info, head to the course repo: https://github.c
 * https://abookapart.com/products/going-offline
 
 * https://adactio.com/journal/15122
+
