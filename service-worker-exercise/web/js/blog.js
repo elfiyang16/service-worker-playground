@@ -5,13 +5,12 @@
   var isOnline = "onLine" in navigator ? navigator.onLine : true;
   var isLoggedIn = /isLoggedIn=1/.test(document.cookie.toString() || "");
   // let the page monitor if we are logged in since worker cannot do it
-  var usingSW = "serviceWorker" in navigator;
   var swRegistration;
   var svcworker;
 
   document.addEventListener("DOMContentLoaded", ready, false);
 
-  if (usingSW) {
+  if ("serviceWorker" in navigator) {
     initServiceWorker().catch(console.error);
   }
   // **********************************
@@ -57,12 +56,12 @@
 
     navigator.serviceWorker.addEventListener("message", onSWMessage, false);
 
-    function onSWMessage(evt) {
-      var { data } = evt;
+    function onSWMessage(e) {
+      var { data } = e;
       // if the worker has this requestStatusUpdate property
       if (data.requestStatusUpdate) {
         console.log(`Receive status update request from service worker `);
-        sendStatusUpdate(evt.ports && evt.ports[0]);
+        sendStatusUpdate(e.ports && e.ports[0]);
       }
     }
 
