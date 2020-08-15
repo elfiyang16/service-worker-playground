@@ -1,10 +1,5 @@
 # Exploring Service Workers
 
-Kyle Simpson
-@getify
-
-getify@gmail.com
-
 ## Starter Files
 
 This package contains the starter files for the Web Workers and Service Workers sections of the course
